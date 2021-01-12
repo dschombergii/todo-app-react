@@ -7,9 +7,10 @@ class App extends Component {
     super()
 
     this.state = {
+      id: 0,
       isClicked: false,
       inputValue: "",
-      listOfTodos: []
+      listOfTodos: [],
     }
   }
 
@@ -25,8 +26,14 @@ class App extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-    this.setState({ listOfTodos: [...this.state.listOfTodos, this.state.inputValue] })
+    this.setState({ listOfTodos: [...this.state.listOfTodos,{input: this.state.inputValue, id: this.state.id}] })
     this.setState({ inputValue: "" })
+    this.setState({ id: this.state.id + 1 })
+  }
+
+  handleDelete = (id) => {
+    console.log(id)
+    this.setState({ listOfTodos: this.state.listOfTodos.filter((todo) => todo.id !== id)})
   }
 
   render() {
@@ -36,11 +43,12 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <form onSubmit={this.handleSubmit}>
             <input type="text" value={this.state.inputValue} onChange={this.handleChange}></input>
-            <button type="submit">Submit</button>
+            <button onSubmit={this.handleSubmit} type="submit">Submit</button>
           </form>
           <ol>
             {this.state.listOfTodos.map((todo) => {
-              return <li key={todo.id}>{todo}</li>
+              return <li key={todo.id}>{todo.input + " "}
+              <button onClick={() => this.handleDelete(todo.id)}>Done</button></li>
             })}</ol>
         </header>
       </div>
