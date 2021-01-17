@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
+import TodoCard from './TodoCard'
 import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.state = {
-      id: 0,
       isClicked: false,
       inputValue: "",
       listOfTodos: [],
@@ -26,14 +26,15 @@ class App extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-    this.setState({ listOfTodos: [...this.state.listOfTodos,{input: this.state.inputValue, id: this.state.id}] })
+    this.setState({ listOfTodos: [...this.state.listOfTodos, this.state.inputValue] })
     this.setState({ inputValue: "" })
-    this.setState({ id: this.state.id + 1 })
   }
 
-  handleDelete = (id) => {
-    console.log(id)
-    this.setState({ listOfTodos: this.state.listOfTodos.filter((todo) => todo.id !== id)})
+  handleDelete = (index) => {
+    console.log(index)
+    let listCopy = this.state.listOfTodos
+    listCopy.splice(index, 1)
+    this.setState({listOfTodos: [...listCopy]})
   }
 
   render() {
@@ -46,10 +47,10 @@ class App extends Component {
             <button onSubmit={this.handleSubmit} type="submit">Submit</button>
           </form>
           <ol>
-            {this.state.listOfTodos.map((todo) => {
-              return <li key={todo.id}>{todo.input + " "}
-              <button onClick={() => this.handleDelete(todo.id)}>Done</button></li>
+            {this.state.listOfTodos.map((todo, index) => {
+              return <TodoCard key={index} index={index} title={todo} removeTodo={this.handleDelete}/>
             })}</ol>
+            {this.props.name}
         </header>
       </div>
     );
